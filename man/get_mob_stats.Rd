@@ -7,6 +7,7 @@
 get_mob_stats(
   mob_in,
   group_var,
+  ref_level = NULL,
   index = c("N", "S", "S_n", "S_PIE"),
   effort_samples = NULL,
   effort_min = 5,
@@ -25,6 +26,10 @@ get_mob_stats(
 
 \item{group_var}{String that specifies which field in \code{mob_in$env} the
 data should be grouped by}
+
+\item{ref_level}{String that defines the reference level of \code{group_var}
+to which all other groups are compared with, defaults to \code{NULL}.
+If \code{NULL} then the default contrasts of \code{group_var} are used.}
 
 \item{index}{The calculated biodiversity indices. The options are
 \itemize{
@@ -54,7 +59,7 @@ individuals then \code{effort_min} are excluded from the analysis with a
 warning. Accordingly, when \code{effort_samples} is set by the user it has
 to be higher than \code{effort_min}.}
 
-\item{extrapolate}{extrapolate    Boolean which specifies if richness should be
+\item{extrapolate}{Boolean which specifies if richness should be
 extrapolated when \code{effort_samples} is larger than the number of
 individuals using the chao1 method. Defaults to TRUE.}
 
@@ -200,7 +205,7 @@ samples occur several times in the resampled data sets.
 data(inv_comm)
 data(inv_plot_attr)
 inv_mob_in = make_mob_in(inv_comm, inv_plot_attr, c('x', 'y'))
-inv_stats = get_mob_stats(inv_mob_in, group_var = "group",
+inv_stats = get_mob_stats(inv_mob_in, group_var = "group", ref_level = 'uninvaded',
                           n_perm = 19, effort_samples = c(5,10))
 plot(inv_stats)
 
@@ -211,7 +216,8 @@ library(parallel)
 cl = makeCluster(2L)
 clusterEvalQ(cl, library(mobr))
 clusterExport(cl, 'inv_mob_in')
-inv_mob_stats = get_mob_stats(inv_mob_in, 'group', n_perm=999, cl=cl)
+inv_mob_stats = get_mob_stats(inv_mob_in, 'group', ref_level = 'uninvaded',
+                              n_perm=999, cl=cl)
 
 stopCluster(cl)
 }

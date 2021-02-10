@@ -17,14 +17,14 @@ inv_mob_in <- make_mob_in(inv_comm, inv_plot_attr, coord_names = c('x', 'y'))
 inv_mob_in
 
 ## ---- fig.width = 5, fig.height = 5-------------------------------------------
-plot_rarefaction(inv_mob_in, 'group', 'sSBR', lwd = 4)
+plot_rarefaction(inv_mob_in, 'group', ref_level = 'uninvaded', 'sSBR', lwd = 4)
 
 ## ---- fig.width = 7, fig.height=4---------------------------------------------
 oldpar <- par(no.readonly = TRUE)       
 par(mfrow = c(1, 2))
-plot_rarefaction(inv_mob_in, 'group', 'IBR', pooled = FALSE, lwd = 2,
+plot_rarefaction(inv_mob_in, 'group', 'uninvaded', 'IBR', pooled = FALSE, lwd = 2,
                  leg_loc = 'topright')
-plot_rarefaction(inv_mob_in, 'group', 'IBR', pooled = TRUE, lwd = 4,
+plot_rarefaction(inv_mob_in, 'group', 'uninvaded', 'IBR', pooled = TRUE, lwd = 4,
                  leg_loc = NA)
 par(oldpar)
 
@@ -36,7 +36,7 @@ plot_abu(inv_mob_in, 'group', type = 'rad', pooled = TRUE , log = 'x')
 par(oldpar)
 
 ## ----run two-scale analysis, eval = FALSE-------------------------------------
-#  inv_stats <- get_mob_stats(inv_mob_in, group_var = "group",
+#  inv_stats <- get_mob_stats(inv_mob_in, group_var = "group", ref_level = 'uninvaded',
 #                             n_perm = 199)
 
 ## ---- echo = FALSE------------------------------------------------------------
@@ -82,18 +82,18 @@ fire_mob_in = make_mob_in(fire_comm, fire_plot_attr,
                           coord_names = c('x', 'y'))
 
 ## -----------------------------------------------------------------------------
-plot_rarefaction(fire_mob_in, 'group', 'IBR')
-plot_rarefaction(fire_mob_in, 'group', 'sSBR')
+plot_rarefaction(fire_mob_in, 'group', ref_level = 'unburned', 'IBR')
+plot_rarefaction(fire_mob_in, 'group', ref_level = 'unburned', 'sSBR')
 
 ## -----------------------------------------------------------------------------
 oldpar <- par(no.readonly = TRUE) 
 par(mfrow = c(1, 2))
-plot_abu(fire_mob_in, 'group', 'rad', leg_loc = 'topright',)
-plot_abu(fire_mob_in, 'group', 'sad', leg_loc = NA)
+plot_abu(fire_mob_in, 'group', ref_level = 'unburned', 'rad', leg_loc = 'topright',)
+plot_abu(fire_mob_in, 'group', ref_level = 'unburned', 'sad', leg_loc = NA)
 par(oldpar)
 
 ## ---- eval = FALSE------------------------------------------------------------
-#  fire_stats = get_mob_stats(fire_mob_in, 'group')
+#  fire_stats = get_mob_stats(fire_mob_in, 'group', ref_level = 'unburned')
 
 ## ---- echo = FALSE------------------------------------------------------------
 load('../vignettes/fire_stats.Rdata')
@@ -103,8 +103,8 @@ plot(fire_stats)
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  fire_deltaS = get_delta_stats(fire_mob_in, 'group', ref_level = 'unburned',
-#                                type = 'discrete', log_scale = T, n_perm = 199,
-#                                overall_p = T)
+#                                type = 'discrete', log_scale = TRUE, n_perm = 199,
+#                                overall_p = TRUE)
 
 ## ---- echo = FALSE------------------------------------------------------------
 load('../vignettes/fire_deltaS.Rdata')
@@ -119,17 +119,17 @@ tank_mob_in = make_mob_in(tank_comm, tank_plot_attr,
                           coord_names = c('x', 'y'))
 
 ## ---- fig.width = 5, fig.height = 5-------------------------------------------
-plot_rarefaction(tank_mob_in, 'group', 'sSBR')
+plot_rarefaction(tank_mob_in, 'group', ref_level = 'low', 'sSBR')
 
 ## ---- fig.width = 7, fig.height=4---------------------------------------------
 oldpar <- par(no.readonly = TRUE) 
 par(mfrow = c(1, 2))
-plot_abu(tank_mob_in, 'group', 'rad')
-plot_abu(tank_mob_in, 'group', 'sad', leg_loc = NA)
+plot_abu(tank_mob_in, 'group', ref_level = 'low', 'rad')
+plot_abu(tank_mob_in, 'group', ref_level = 'low', 'sad', leg_loc = NA)
 par(oldpar)
 
 ## ---- eval = FALSE------------------------------------------------------------
-#  tank_stats = get_mob_stats(tank_mob_in, 'group')
+#  tank_stats = get_mob_stats(tank_mob_in, 'group', ref_level = 'low')
 
 ## ---- echo = FALSE------------------------------------------------------------
 load('../vignettes/tank_stats.Rdata')
