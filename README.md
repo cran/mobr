@@ -1,7 +1,5 @@
 # mobr
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![cran checks](https://cranchecks.info/badges/worst/mobr)](https://cranchecks.info/pkgs/mobr)
-[![Travis build status](https://travis-ci.org/MoBiodiv/mobr.svg?branch=master)](https://travis-ci.org/MoBiodiv/mobr)
 [![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/mobr)](https://github.com/r-hub/cranlogs.app)
 [![cran version](https://www.r-pkg.org/badges/version/mobr)](https://cran.r-project.org/package=mobr)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4014111.svg)](https://doi.org/10.5281/zenodo.4014111)
@@ -18,6 +16,9 @@ biodiversity are linked to changes in community structure: the SAD, total
 abundance, and spatial aggregation. 
 
 The concepts and methods behind this R package are described in three publications.
+
+McGlinn, D.J., S.A. Blowes, M. Dornelas, T. Engel, I.S. Martins, H. Shimadzu,  N.J. Gotelli,  A. Magurran,  B.J. McGill,  and J.M. Chase. accepted. Disentangling non-random structure from random placement when estimating β-diversity through space or time. Ecosphere. https://doi.org/10.1101/2023.09.19.558467 
+
 
 McGlinn, D.J. X. Xiao, F. May, N.J Gotelli, T. Engel, S.A Blowes, T.M. Knight, O. Purschke, J.M Chase, and B.J. McGill. 2019. MoB (Measurement of Biodiversity): a method to separate the scale-dependent effects of species abundance distribution, density, and aggregation on diversity change. Methods in Ecology and Evolution. 10:258–269. https://doi.org/10.1111/2041-210X.13102
 
@@ -37,17 +38,16 @@ citation(package = "mobr")
 install.packages('mobr')
 ```
 
-Or, install development version
+Or, install the Github version
 
 ```r
-install.packages('devtools')
-library(devtools)
+install.packages('remotes')
 ```
 
-Now that `devtools` is installed you can install `mobr using the following R code:
+Now that `remotes` is installed you can install `mobr` using the following R code:
 
 ```r
-install_github('MoBiodiv/mobr')
+remotes::install_github('MoBiodiv/mobr')
 ```
 
 ## Examples
@@ -58,14 +58,20 @@ that uses the two key analyses and related graphics.
 
 ```r
 library(mobr)
-data(inv_comm)
-data(inv_plot_attr)
-inv_mob_in = make_mob_in(inv_comm, inv_plot_attr, coord_names = c('x', 'y'))
-inv_stats = get_mob_stats(inv_mob_in, 'group', ref_level = 'uninvaded')
-plot(inv_stats)
-inv_deltaS = get_delta_stats(inv_mob_in, 'group', ref_level='uninvaded',
+library(dplyr)
+
+data(tank_comm)
+data(tank_plot_attr)
+indices <- c('N', 'S', 'S_n', 'S_C', 'S_PIE')
+tank_div <- tibble(tank_comm) %>% 
+  group_by(group = tank_plot_attr$group) %>% 
+  group_modify(~ calc_comm_div(.x, index = indices, effort = 5,
+                               extrapolate = TRUE))
+plot(tank_div)
+tank_mob_in <- make_mob_in(tank_comm, tank_plot_attr, coord_names = c('x', 'y'))
+tank_deltaS <- get_delta_stats(tank_mob_in, 'group', ref_level='low',
                              type='discrete', log_scale=TRUE, n_perm = 5)
-plot(inv_deltaS, 'b1')
+plot(tank_deltaS, 'b1')
 ```
 
 ## Meta
